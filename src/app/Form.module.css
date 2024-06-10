@@ -8,7 +8,7 @@
   padding: 1rem;
   border-radius: 8px;
   border: 2px dashed rgb(81, 64, 178);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 15px rgb(0, 0, 0);
   position: relative;
 }
 
@@ -38,7 +38,12 @@
   text-align: center;
   font-size: 1.5rem;
   font-weight: bold;
-  margin-bottom: 1.5rem;
+}
+
+.error {
+  color: red;
+  font-size: 0.875em;
+  margin-top: 0.25em;
 }
 
 .form {
