@@ -1,11 +1,12 @@
 "use client";
 
-import Form from './Form';
+import Export from "../export";
 
-export default function Home() {
+
+export default function Page() {
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <Form />
+      <Export />
     </div>
   );
 }

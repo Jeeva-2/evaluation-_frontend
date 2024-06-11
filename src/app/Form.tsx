@@ -67,7 +67,7 @@ const Form = () => {
     formDataToSend.append('name', formData.name.trim());
     formDataToSend.append('age', formData.age.trim());
     formDataToSend.append('roll', formData.roll.trim());
-    formDataToSend.append('companyname', 'ATS');
+    formDataToSend.append('companyname', formData.company.trim());
 
     if (formData.image) {
       const compressedImage = await imageCompression(formData.image, {
@@ -91,6 +91,7 @@ const Form = () => {
         localStorage.setItem('userData', JSON.stringify(responseData));
         setIsSubmitted(true);
         toast.success('Form submitted successfully!');
+        window.location.href = '/export'; // Redirect to home page if no data found
       } else {
         // Handle the error response
         const errorData = await response.json();
@@ -109,67 +110,6 @@ const Form = () => {
       setLoading(false); // Stop the loader
     }
   }
-
-  const handleSendMail = async () => {
-    setLoading(true); // Start the loader
-    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-    try {
-      const response = await fetch('http://localhost:3100/send_mail', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (response.ok) {
-        toast.success('Mail sent successfully!');
-      } else {
-        const errorData = await response.json();
-        toast.error('Error sending mail: ' + (errorData.message || errorData.error));
-      }
-    } catch (error) {
-      toast.error('Unexpected error occurred while sending mail. Please try again later.');
-    } finally {
-      setLoading(false); // Stop the loader
-    }
-  };
-
-  const handleExportData = async () => {
-    setLoading(true); // Start the loader
-    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-    console.log(userData)
-    try {
-      const { name } = userData;
-      const response = await fetch('http://localhost:3100/export_pdf', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (response.ok) {
-        const pdfBlob = await response.blob(); // Get the response body as a Blob
-        const url = window.URL.createObjectURL(pdfBlob); // Create a URL for the Blob
-        const link = document.createElement('a');
-        link.href = url; // Set the href attribute to the Blob URL
-        link.download = `${name}.pdf`; // Set the download attribute to the desired filename
-        document.body.appendChild(link);
-        link.click(); // Trigger the click event to start the download
-        document.body.removeChild(link); // Remove the anchor tag from the document body after the download
-        window.URL.revokeObjectURL(url); // Release the object URL
-        toast.success('Data exported successfully!');
-      } else {
-        const errorData = await response.json();
-        toast.error('Error exporting data: ' + (errorData.message || errorData.error));
-      }
-    } catch (error) {
-      toast.error('Unexpected error occurred while exporting data. Please try again later.');
-    } finally {
-      setLoading(false); // Stop the loader
-    }
-  };
 
   return (
     <div className={styles.container}>
@@ -288,16 +228,6 @@ const Form = () => {
           <button type="submit" className={styles.button} disabled={loading}>
             Submit
           </button>
-          {isSubmitted && (
-            <>
-              <button type="button" className={styles.button} onClick={handleSendMail}>
-                Send Mail
-              </button>
-              <button type="button" className={styles.button} onClick={handleExportData}>
-                Export Data
-              </button>
-            </>
-          )}
         </div>
       </form>
       <ToastContainer />
