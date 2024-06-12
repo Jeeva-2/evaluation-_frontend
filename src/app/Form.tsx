@@ -12,7 +12,7 @@ const Form = () => {
     email: '',
     name: '',
     age: '',
-    roll: '',
+    role: '',
     company: '',
     image: null as File | null
   });
@@ -22,7 +22,7 @@ const Form = () => {
     email: '',
     name: '',
     age: '',
-    roll: '',
+    role: '',
     company: '',
     image: ''
   });
@@ -66,7 +66,7 @@ const Form = () => {
     formDataToSend.append('email', formData.email.trim().toLowerCase());
     formDataToSend.append('name', formData.name.trim());
     formDataToSend.append('age', formData.age.trim());
-    formDataToSend.append('roll', formData.roll.trim());
+    formDataToSend.append('role', formData.role.trim());
     formDataToSend.append('companyname', formData.company.trim());
 
     if (formData.image) {
@@ -164,34 +164,34 @@ const Form = () => {
           <label className={styles.label}><label className={styles.error}> * </label>Role</label>
           <div className={styles.inputGroup}>
             <select
-              name="roll"
-              value={formData.roll}
+              name="role"
+              value={formData.role}
               onChange={handleChange}
               required
               className={styles.input}
               disabled={isSubmitted}
             >
-              <option value="">Select a roll</option>
+              <option value="">Select a role</option>
               <option value="intern">Intern</option>
               <option value="developer">Developer</option>
               <option value="manager">Manager</option>
               <option value="designer">Designer</option>
               {/* <option value="other">Other</option> */}
             </select>
-            {formData.roll === 'other' && (
+            {formData.role === 'other' && (
               <input
                 type="text"
-                name="rollOther"
-                value={formData.roll}
+                name="roleOther"
+                value={formData.role}
                 onChange={handleChange}
                 required
-                placeholder="Enter roll"
+                placeholder="Enter role"
                 className={styles.input}
                 readOnly={isSubmitted}
               />
             )}
           </div>
-          {errors.roll && <div className={styles.error}>{errors.roll}</div>}
+          {errors.role && <div className={styles.error}>{errors.role}</div>}
         </div>
         <div>
           <label className={styles.label}><label className={styles.error}> * </label>Company</label>

@@ -9,7 +9,7 @@ const Export = () => {
     email: '',
     name: '',
     age: '',
-    roll: '',
+    role: '',
     companyname: '',
     image: null as string | null // Image is stored as a base64 string or URL
   });
@@ -28,7 +28,7 @@ const Export = () => {
         email: storedData.email || '',
         name: storedData.name || '',
         age: storedData.age || '',
-        roll: storedData.roll || '',
+        role: storedData.role || '',
         companyname: storedData.companyname || '',
         image: storedData.image || null
       });
@@ -140,8 +140,8 @@ const Export = () => {
                 <label className={styles.label}>Role</label>
                 <input
                   type="text"
-                  name="roll"
-                  value={formData.roll}
+                  name="role"
+                  value={formData.role}
                   readOnly
                   className={styles.input}
                 />
