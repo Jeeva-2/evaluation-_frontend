@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styles from './Form.module.css';
 import imageCompression from 'browser-image-compression';
 import { BarLoader } from 'react-spinners';
@@ -27,11 +27,44 @@ const Form = () => {
     image: ''
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return 'Invalid email format';
+    }
+    const allowedDomains = ['gmail.com', 'yahoo.com', 'outlook.com', 'aaludra.com'];
+    const domain = email.split('@')[1];
+    if (!allowedDomains.includes(domain)) {
+      return 'Only Aaludra, Gmail, Yahoo, and Outlook domains are allowed';
+    }
+    return '';
+  };
+
+  const validateName = (name) => {
+    if (name.length > 50) {
+      return 'Name should be maximum 50 characters long';
+    }
+    return '';
+  };
+
+  const validateAge = (age) => {
+    if (!/^\d{2,3}$/.test(age)) {
+      return 'Age should be a number with 2 or 3 digits';
+    }
+    return '';
+  };
+
+  const handleChange = (e) => {
     const { name, value, files } = e.target;
     let error = '';
 
-    if (name === 'image' && files) {
+    if (name === 'email') {
+      error = validateEmail(value);
+    } else if (name === 'name') {
+      error = validateName(value);
+    } else if (name === 'age') {
+      error = validateAge(value);
+    } else if (name === 'image' && files) {
       const file = files[0];
       if (!file.type.startsWith('image/')) {
         error = 'Only image files are allowed';
@@ -51,12 +84,24 @@ const Form = () => {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true); // Start the loader
 
     // Check if there are any validation errors
-    if (Object.values(errors).some(error => error)) {
+    const errorMessages = {};
+    Object.keys(formData).forEach((key) => {
+      if (key !== 'image') {
+        const error = handleChange({ target: { name: key, value: formData[key] } });
+        if (error) {
+          errorMessages[key] = error;
+        }
+      }
+    });
+    setErrors(errorMessages);
+    const hasErrors = Object.values(errorMessages).some((error) => error !== '');
+
+    if (hasErrors) {
       toast.error('Please fix the errors in the form');
       setLoading(false);
       return;
@@ -91,13 +136,25 @@ const Form = () => {
         localStorage.setItem('userData', JSON.stringify(responseData));
         setIsSubmitted(true);
         toast.success('Form submitted successfully!');
-        window.location.href = '/export'; // Redirect to home page if no data found
+        // Clear form data
+        setFormData({
+          email: '',
+          name: '',
+          age: '',
+          role: '',
+          company: '',
+          image: null as File | null
+        });
+        setTimeout(() => {
+          window.location.reload();
+          window.location.href = '/export'; // Redirect to home page if no data found
+        }, 1000);
       } else {
         // Handle the error response
         const errorData = await response.json();
         console.error('Error:', errorData.message || errorData.error);
         if (response.status === 400) {
-          toast.error(errorData.message || "User already exists");
+          toast.error(errorData.message || 'User already exists');
         } else {
           toast.error('Error submitting form: ' + errorData.message);
         }
@@ -109,9 +166,10 @@ const Form = () => {
     } finally {
       setLoading(false); // Stop the loader
     }
-  }
+  };
 
   return (
+    <div id='main'>
     <div className={styles.container}>
       {loading && (
         <div className={styles.loadingOverlay}>
@@ -121,7 +179,7 @@ const Form = () => {
       <form onSubmit={handleSubmit} className={`${styles.form} ${loading ? styles.loading : ''}`}>
         <h2 className={styles.heading}>Submit Your Details</h2>
         <div>
-          <label className={styles.label}><label className={styles.error}> * </label>Email</label>
+          <label className={styles.label}><span className={styles.error}> * </span>Email</label>
           <input
             type="email"
             name="email"
@@ -134,12 +192,13 @@ const Form = () => {
           {errors.email && <div className={styles.error}>{errors.email}</div>}
         </div>
         <div>
-          <label className={styles.label}><label className={styles.error}> * </label>Name</label>
+          <label className={styles.label}><span className={styles.error}> * </span>Name</label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
+            maxLength="50"
             required
             className={styles.input}
             readOnly={isSubmitted} // Make input read-only after submission
@@ -147,13 +206,14 @@ const Form = () => {
           {errors.name && <div className={styles.error}>{errors.name}</div>}
         </div>
         <div>
-          <label className={styles.label}><label className={styles.error}> * </label>Age</label>
+          <label className={styles.label}><span className={styles.error}> * </span>Age</label>
           <input
             type="number"
             name="age"
             value={formData.age}
             onChange={handleChange}
             min="1"
+            max="999"
             required
             className={styles.input}
             readOnly={isSubmitted} // Make input read-only after submission
@@ -161,7 +221,7 @@ const Form = () => {
           {errors.age && <div className={styles.error}>{errors.age}</div>}
         </div>
         <div>
-          <label className={styles.label}><label className={styles.error}> * </label>Role</label>
+          <label className={styles.label}><span className={styles.error}> * </span>Role</label>
           <div className={styles.inputGroup}>
             <select
               name="role"
@@ -176,7 +236,6 @@ const Form = () => {
               <option value="developer">Developer</option>
               <option value="manager">Manager</option>
               <option value="designer">Designer</option>
-              {/* <option value="other">Other</option> */}
             </select>
             {formData.role === 'other' && (
               <input
@@ -194,20 +253,19 @@ const Form = () => {
           {errors.role && <div className={styles.error}>{errors.role}</div>}
         </div>
         <div>
-          <label className={styles.label}><label className={styles.error}> * </label>Company</label>
+          <label className={styles.label}><span className={styles.error}> * </span>Company</label>
           <select
             name="company"
             value={formData.company}
             onChange={handleChange}
             required
             className={styles.input}
-            disabled={isSubmitted} // Make dropdown disabled after submission
+            disabled={isSubmitted}
           >
             <option value="">Select a company</option>
             <option value="Aaludra Technology Solutions">Aaludra Technology Solutions</option>
             <option value="Google">Google</option>
             <option value="amazon">Amazon</option>
-            {/* Add more options as needed */}
           </select>
           {errors.company && <div className={styles.error}>{errors.company}</div>}
         </div>
@@ -220,7 +278,7 @@ const Form = () => {
             onChange={handleChange}
             required
             className={styles.fileInput}
-            disabled={isSubmitted} // Disable file input after submission
+            disabled={isSubmitted}
           />
           {errors.image && <div className={styles.error}>{errors.image}</div>}
         </div>
@@ -231,6 +289,7 @@ const Form = () => {
         </div>
       </form>
       <ToastContainer />
+    </div>
     </div>
   );
 };
