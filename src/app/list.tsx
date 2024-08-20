@@ -50,7 +50,7 @@ const SmallAvatar = styled(Avatar)(({ theme }) => ({
 
 const handleSendMail = async (id: string) => {
   try {
-    const response = await fetch(`http://localhost:3100/send_mail_id?id=${id}`);
+    const response = await fetch(`https://chat-backend-ez0j.onrender.com/send_mail_id?id=${id}`);
 
     if (response.ok) {
       toast.success('Mail sent successfully!');
@@ -65,7 +65,7 @@ const handleSendMail = async (id: string) => {
 
 const handleExportData = async (id) => {
   try {
-    const response = await fetch(`http://localhost:3100/export_pdf?id=${id}`);
+    const response = await fetch(`https://chat-backend-ez0j.onrender.com/export_pdf?id=${id}`);
 
     if (response.ok) {
       const pdfBlob = await response.blob(); // Get the response body as a Blob
@@ -131,7 +131,7 @@ export default function DataTable() {
   const [loading, setLoading] = useState(false); // Add loading state
 
   useEffect(() => {
-    fetch('http://localhost:3100/getuserlist')
+    fetch('https://chat-backend-ez0j.onrender.com/getuserlist')
       .then((response) => response.json())
       .then((data) => {
         if (data && data.data) {
@@ -143,7 +143,7 @@ export default function DataTable() {
 
 
   return (
-    <div style={{ height: '100vh', width: '100%', backgroundColor:"white" }}>
+    <div style={{ height: '100vh', width: '100%', backgroundColor: "white" }}>
       <DataGrid
         rows={rows}
         columns={columns}

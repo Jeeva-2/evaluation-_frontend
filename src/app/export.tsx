@@ -38,7 +38,7 @@ const Export = () => {
     setLoading(true);
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
     try {
-      const response = await fetch('http://localhost:3100/send_mail', {
+      const response = await fetch('https://chat-backend-ez0j.onrender.com/send_mail', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ const Export = () => {
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
     try {
       const { name } = userData;
-      const response = await fetch('http://localhost:3100/export_pdf', {
+      const response = await fetch('https://chat-backend-ez0j.onrender.com/export_pdf', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -124,7 +124,7 @@ const Form = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3100/add_user', {
+      const response = await fetch('https://chat-backend-ez0j.onrender.com/add_user', {
         method: 'POST',
         body: formDataToSend,
       });
@@ -170,126 +170,126 @@ const Form = () => {
 
   return (
     <div id='main'>
-    <div className={styles.container}>
-      {loading && (
-        <div className={styles.loadingOverlay}>
-          <BarLoader color="#36d7b7" />
-        </div>
-      )}
-      <form onSubmit={handleSubmit} className={`${styles.form} ${loading ? styles.loading : ''}`}>
-        <h2 className={styles.heading}>Submit Your Details</h2>
-        <div>
-          <label className={styles.label}><span className={styles.error}> * </span>Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className={styles.input}
-            readOnly={isSubmitted} // Make input read-only after submission
-          />
-          {errors.email && <div className={styles.error}>{errors.email}</div>}
-        </div>
-        <div>
-          <label className={styles.label}><span className={styles.error}> * </span>Name</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            maxLength="50"
-            required
-            className={styles.input}
-            readOnly={isSubmitted} // Make input read-only after submission
-          />
-          {errors.name && <div className={styles.error}>{errors.name}</div>}
-        </div>
-        <div>
-          <label className={styles.label}><span className={styles.error}> * </span>Age</label>
-          <input
-            type="number"
-            name="age"
-            value={formData.age}
-            onChange={handleChange}
-            min="1"
-            max="999"
-            required
-            className={styles.input}
-            readOnly={isSubmitted} // Make input read-only after submission
-          />
-          {errors.age && <div className={styles.error}>{errors.age}</div>}
-        </div>
-        <div>
-          <label className={styles.label}><span className={styles.error}> * </span>Role</label>
-          <div className={styles.inputGroup}>
+      <div className={styles.container}>
+        {loading && (
+          <div className={styles.loadingOverlay}>
+            <BarLoader color="#36d7b7" />
+          </div>
+        )}
+        <form onSubmit={handleSubmit} className={`${styles.form} ${loading ? styles.loading : ''}`}>
+          <h2 className={styles.heading}>Submit Your Details</h2>
+          <div>
+            <label className={styles.label}><span className={styles.error}> * </span>Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className={styles.input}
+              readOnly={isSubmitted} // Make input read-only after submission
+            />
+            {errors.email && <div className={styles.error}>{errors.email}</div>}
+          </div>
+          <div>
+            <label className={styles.label}><span className={styles.error}> * </span>Name</label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              maxLength="50"
+              required
+              className={styles.input}
+              readOnly={isSubmitted} // Make input read-only after submission
+            />
+            {errors.name && <div className={styles.error}>{errors.name}</div>}
+          </div>
+          <div>
+            <label className={styles.label}><span className={styles.error}> * </span>Age</label>
+            <input
+              type="number"
+              name="age"
+              value={formData.age}
+              onChange={handleChange}
+              min="1"
+              max="999"
+              required
+              className={styles.input}
+              readOnly={isSubmitted} // Make input read-only after submission
+            />
+            {errors.age && <div className={styles.error}>{errors.age}</div>}
+          </div>
+          <div>
+            <label className={styles.label}><span className={styles.error}> * </span>Role</label>
+            <div className={styles.inputGroup}>
+              <select
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                required
+                className={styles.input}
+                disabled={isSubmitted}
+              >
+                <option value="">Select a role</option>
+                <option value="intern">Intern</option>
+                <option value="developer">Developer</option>
+                <option value="manager">Manager</option>
+                <option value="designer">Designer</option>
+              </select>
+              {formData.role === 'other' && (
+                <input
+                  type="text"
+                  name="roleOther"
+                  value={formData.role}
+                  onChange={handleChange}
+                  required
+                  placeholder="Enter role"
+                  className={styles.input}
+                  readOnly={isSubmitted}
+                />
+              )}
+            </div>
+            {errors.role && <div className={styles.error}>{errors.role}</div>}
+          </div>
+          <div>
+            <label className={styles.label}><span className={styles.error}> * </span>Company</label>
             <select
-              name="role"
-              value={formData.role}
+              name="company"
+              value={formData.company}
               onChange={handleChange}
               required
               className={styles.input}
               disabled={isSubmitted}
             >
-              <option value="">Select a role</option>
-              <option value="intern">Intern</option>
-              <option value="developer">Developer</option>
-              <option value="manager">Manager</option>
-              <option value="designer">Designer</option>
+              <option value="">Select a company</option>
+              <option value="Aaludra Technology Solutions">Aaludra Technology Solutions</option>
+              <option value="Google">Google</option>
+              <option value="amazon">Amazon</option>
             </select>
-            {formData.role === 'other' && (
-              <input
-                type="text"
-                name="roleOther"
-                value={formData.role}
-                onChange={handleChange}
-                required
-                placeholder="Enter role"
-                className={styles.input}
-                readOnly={isSubmitted}
-              />
-            )}
+            {errors.company && <div className={styles.error}>{errors.company}</div>}
           </div>
-          {errors.role && <div className={styles.error}>{errors.role}</div>}
-        </div>
-        <div>
-          <label className={styles.label}><span className={styles.error}> * </span>Company</label>
-          <select
-            name="company"
-            value={formData.company}
-            onChange={handleChange}
-            required
-            className={styles.input}
-            disabled={isSubmitted}
-          >
-            <option value="">Select a company</option>
-            <option value="Aaludra Technology Solutions">Aaludra Technology Solutions</option>
-            <option value="Google">Google</option>
-            <option value="amazon">Amazon</option>
-          </select>
-          {errors.company && <div className={styles.error}>{errors.company}</div>}
-        </div>
-        <div>
-          <label className={styles.label}>Upload Image</label>
-          <input
-            type="file"
-            name="image"
-            accept="image/*"
-            onChange={handleChange}
-            required
-            className={styles.fileInput}
-            disabled={isSubmitted}
-          />
-          {errors.image && <div className={styles.error}>{errors.image}</div>}
-        </div>
-        <div className={styles.actions}>
-          <button type="submit" className={styles.button} disabled={loading}>
-            Submit
-          </button>
-        </div>
-      </form>
-      <ToastContainer />
-    </div>
+          <div>
+            <label className={styles.label}>Upload Image</label>
+            <input
+              type="file"
+              name="image"
+              accept="image/*"
+              onChange={handleChange}
+              required
+              className={styles.fileInput}
+              disabled={isSubmitted}
+            />
+            {errors.image && <div className={styles.error}>{errors.image}</div>}
+          </div>
+          <div className={styles.actions}>
+            <button type="submit" className={styles.button} disabled={loading}>
+              Submit
+            </button>
+          </div>
+        </form>
+        <ToastContainer />
+      </div>
     </div>
   );
 };
